@@ -9,7 +9,7 @@ import (
 func Consume(topics []string, server string, msgs chan *kafka.Message) error {
 	consumer, err := kafka.NewConsumer(&kafka.ConfigMap{
 		"bootstrap.servers": server,
-		"group.id":          "marc dev",
+		"group.id":          "marcelo_dev",
 		"auto.offset.reset": "earliest",
 	})
 
@@ -32,7 +32,7 @@ func Consume(topics []string, server string, msgs chan *kafka.Message) error {
 func Producer(topics []string, server, msg interface{}) error {
 	publish, err := kafka.NewProducer(&kafka.ConfigMap{
 		"bootstrap.servers": server,
-		"group.id":          "marc dev",
+		"group.id":          "marcelo_dev",
 		"auto.offset.reset": "earliest",
 	})
 
