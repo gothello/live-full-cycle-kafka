@@ -1,11 +1,15 @@
 package akafka
 
-import "github.com/confluentinc/confluent-kafka-go/kafka"
+import (
+	"encoding/json"
+
+	"github.com/confluentinc/confluent-kafka-go/kafka"
+)
 
 func Consume(topics []string, server string, msgs chan *kafka.Message) error {
 	consumer, err := kafka.NewConsumer(&kafka.ConfigMap{
 		"bootstrap.servers": server,
-		"group.id":          "imersao12-go-esquenta",
+		"group.id":          "marc dev",
 		"auto.offset.reset": "earliest",
 	})
 
@@ -23,4 +27,36 @@ func Consume(topics []string, server string, msgs chan *kafka.Message) error {
 
 		msgs <- msg
 	}
+}
+
+func Producer(topics []string, server, msg interface{}) error {
+	publish, err := kafka.NewProducer(&kafka.ConfigMap{
+		"bootstrap.servers": server,
+		"group.id":          "marc dev",
+		"auto.offset.reset": "earliest",
+	})
+
+	if err != nil {
+		return err
+	}
+
+	defer publish.Close()
+
+	body, err := json.Marshal(msg)
+	if err != nil {
+		return err
+	}
+
+	for _, t := range topics {
+		err := publish.Produce(&kafka.Message{
+			TopicPartition: kafka.TopicPartition{Topic: &t, Partition: kafka.PartitionAny},
+			Value:          body,
+		}, nil)
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
