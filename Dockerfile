@@ -1,11 +1,7 @@
-FROM golang
+FROM golang:latest
 
-WORKDIR /app
+WORKDIR /go/app
 
-COPY . . 
+RUN apt-get update && apt-get install -y librdkafka-dev
 
-RUN go mod download
-
-RUN go build -o live
-
-ENTRYPOINT ./live
+CMD ["tail", "-f", "/dev/null"]
